@@ -15,10 +15,30 @@ public class Currency
 	{
 		this.handler=handler;
 	}
+
+	public String getHandler()
+	{
+		return this.handler;
+	}
 	
 	public void setType(String type)
 	{
 		this.type=type;
+	}
+
+	public String getType()
+	{
+		return this.type;
+	}
+
+	public void setValue(double value)
+	{
+		this.value=value;
+	}
+
+	public double getValue()
+	{
+		return this.value;
 	}
 	
 	public void setName(String name)
@@ -26,54 +46,34 @@ public class Currency
 		this.name=name;
 	}
 	
-	public void setValue(double value)
-	{
-		this.value=value;
-	}
-	
-	public void setSize(String size)
-	{
-		this.size=size;
-	}
-	
-	public void setMaterial(String material)
-	{
-		this.material=material;
-	}
-	
-	public void setQuantity(int quantity)
-	{
-		this.quantity=quantity;
-	}
-	
-	public String getHandler()
-	{
-		return this.handler;
-	}
-	
-	public String getType()
-	{
-		return this.type;
-	}
-	
 	public String getName()
 	{
 		return this.name;
 	}
-	
-	public double getValue()
+
+	public void setSize(String size)
 	{
-		return this.value;
+		this.size=size;
 	}
 	
 	public String getSize()
 	{
 		return this.size;
 	}
+
+	public void setMaterial(String material)
+	{
+		this.material=material;
+	}
 	
 	public String getMaterial()
 	{
 		return this.material;
+	}
+
+	public void setQuantity(int quantity)
+	{
+		this.quantity=quantity;
 	}
 	
 	public int getQuantity()
@@ -86,7 +86,4 @@ public class Currency
 		return "CurrencyInventory: " + this.type + " CurrencyUnit: " + this.name + " Value: " + this.value + " Size: " + this.size + " Material: " 
 				+ this.material ;
 	}
-	
-	
-
 }

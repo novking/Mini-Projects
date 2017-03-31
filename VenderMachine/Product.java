@@ -14,55 +14,55 @@ public class Product
 	{
 		this.name=name;
 	}
+
+	public String getName()
+	{
+		return this.name;
+	}
 	
 	public void setPrice(double price)
 	{
 		this.price=price;
+	}
+
+	public double getPrice()
+	{
+		return this.price;
 	}
 	
 	public void setContainer(String container)
 	{
 		this.container=container;
 	}
+
+	public String getContainer()
+	{
+		return this.container;
+	}
 	
 	public void setUnit(String unit)
 	{
 		this.unit=unit;
+	}
+
+	public String getUnit()
+	{
+		return this.unit;
 	}
 	
 	public void setSize(double size)
 	{
 		this.size=size;
 	}
+
+	public double getSize()
+	{
+		return this.size;
+	}
 	
 	public void setQuantity(int quantity)
 	{
 		this.quantity=quantity;
-	}
-	
-	public String getName()
-	{
-		return this.name;
-	}
-	
-	public double getPrice()
-	{
-		return this.price;
-	}
-	
-	public String getContainer()
-	{
-		return this.container;
-	}
-	
-	public String getUnit()
-	{
-		return this.unit;
-	}
-	
-	public double getSize()
-	{
-		return this.size;
 	}
 	
 	public int getQuantity()
@@ -75,9 +75,6 @@ public class Product
 		return "Inventoryitem: Name: " + this.name + " Price: " + this.price + " Container: " + this.container 
 				+ " Unit: " + unit + " Size: " + size + " Quantity: " + quantity + " in stock" ;
 	}
-	
-	
-	
 }
 
 

@@ -1,141 +1,103 @@
 import java.util.Scanner;
 
 public class VenderMachine {
-
-	public static void main(String[] args) 
-	{
-		//initiate product
-		String [] name= {"Apple Juice", "Hersey Chocolate"};
-		double [] price = {1.0, 1.0};
-		String [] container = {"Carton-thinRectangle","Bag-medium"};
-		String [] unit = {"ounces", "ounces"};
-		double [] size = {6.0,4.0};
-		int [] quantity = {10, 10};
-		Product [] item=new Product[name.length];
-		
-		//load product
-		for (int i=0; i<item.length;i++ )
+	private Product [] loadProduct (String name[], double[] price, String[] container, String[] unit, double[] size, int[] quantity) {
+		Product [] items = new Product[name.length];
+		for (int i=0; i<items.length;i++ )
 		{
-			item[i] = new Product();
-			item[i].setName(name[i]);
-			item[i].setPrice(price[i]);
-			item[i].setContainer(container[i]);
-			item[i].setUnit(unit[i]);
-			item[i].setSize(size[i]);
-			item[i].setQuantity(quantity[i]);						
+			items[i] = new Product();
+			items[i].setName(name[i]);
+			items[i].setPrice(price[i]);
+			items[i].setContainer(container[i]);
+			items[i].setUnit(unit[i]);
+			items[i].setSize(size[i]);
+			items[i].setQuantity(quantity[i]);						
 		}
-		
-		//initiate currency
-		String handler="USD";
-		String [] type={"PaperCurrency","PaperCurrency","CoinCurrency","CoinCurrency"};
-		String [] currencyName={"5 Dollar Bill","1 Dollar Bill","50 cent","Quarter"};
-		double [] value={5,1,0.5,0.25};
-		String [] currencySize={"medium","medium","large","medium"};
-		String [] material={"paper","paper","metal","metal"};
-		int [] currencyQuantity={8,5,0,0};
-		
-		Currency [] currency=new Currency[currencyName.length];
-		
-		for(int i=0; i<currency.length;i++ )
-		{
-			currency[i] = new Currency();
-			currency[i].setType(type[i]);
-			currency[i].setHandler(handler);
-			currency[i].setName(currencyName[i]);
-			currency[i].setValue(value[i]);
-			currency[i].setSize(currencySize[i]);
-			currency[i].setMaterial(material[i]);
-			currency[i].setQuantity(currencyQuantity[i]);
-		}		
-		machineCommand(item, currency);
 	}
-	
-	
-	
-	public static void ShowCommand()
+
+	private static void ShowCommand()  // all the methods should be private in this case. coz the user only need go through 'option' you provide.
 	{
 		System.out.print("Available Commands\n\n"
 				 + "Show Commands:     0\n"
 				 + "Display Inventory: 1\n"
 				 + "Display Currency:  2\n"
-				 + "Purchase Item:     3\n"
+				 + "Purchase items:     3\n"
 				 + "Exit:             -1\n\n\n"
 				 + "Command: ");		
 	}
 	
 	
-	public static void displayProduct(Product item[])
+	private static void displayProduct(Product items[])
 	{
-		for(int i=0;i<item.length ;i++)
-		{
-			System.out.println(i + ": " + item[i].toSting() );
+		for(int i = 0; i < items.length; i++) // how many times i have to say. you need the space.
+		{	
+			String outputMessage = String.format("%d : %s", i, items[i].toSting()); // this is the best practice
+			System.out.println(outputMessage);
 		}
 		System.out.println();		
 	}
 	
-	public static void displayCurrency(Currency currency[])
+	private static void displayCurrency(Currency currency[])
 	{
-		System.out.println("Currency Handler: " + currency[0].getHandler());
-		System.out.println("Handles Paper Currency: " + isCurrencyPaperMaterial(currency));
-		System.out.println("Handles Coins Currency: " + isCurrencyMetalMaterial(currency));
-		System.out.println("Provides change paper: " + isProvidePaperMaterial(currency));
-		System.out.println("Provides change coin: " + isProvideMetalMaterial(currency));
-		for(int i=0;i<currency.length;i++)
+		System.out.println("Currency Handler: " + currency[0].getHandler()); // what is this? i don't understand...
+		System.out.println("Handles Paper Currency: " + checkCurrency(currency, "paper", false)); // 
+		System.out.println("Handles Coins Currency: " + checkCurrency(currency, "metal", false));
+		System.out.println("Provides change paper: " + checkCurrency(currency, "paper", true));
+		System.out.println("Provides change coin: " + checkCurrency(currency, "metal", true));
+
+		for(int i=0;i<currency.length;i++) // spacing
 		{
-			System.out.println(currency[i].toString() + " Quantity: " + currency[i].getQuantity() + " in stock");
+			System.out.println(currency[i].toString() + " Quantity: " + currency[i].getQuantity() + " in stock.");
 		}
 		System.out.println();
-		
 	}
 	
-	public static void makePurchase(double itemPrice, double payValue, Product item[], int itemNumber, int diffCurrency,
+	private static void makePurchase(double itemPrice, double payValue, Product items[], int itemNumber, int diffCurrency,
 									Currency currency[], int currencyType[], int currencyCount[])
 	{
-		if (itemPrice<=payValue && item[itemNumber].getQuantity()>0)
+		if (itemPrice<=payValue && items[itemNumber].getQuantity()>0)
 		{
-			item[itemNumber].setQuantity(item[itemNumber].getQuantity()-1);
+			items[itemNumber].setQuantity(items[itemNumber].getQuantity()-1);
 			for (int k=0; k<diffCurrency; k++)
 			{
 				currency[currencyType[k]].setQuantity(currency[currencyType[k]].getQuantity() + currencyCount[k]);
+				// why put everything together. you need to separate them. make some intermedia constant or something. I'm not going to read this.
 			}
-			System.out.println("\nItem Purchased");
-			
+			System.out.println("\nitems Purchased");
 		}
 		else if(itemPrice>payValue)
 		{
-			System.out.println("Inadaquate funds\tPaid: " + payValue +"item cost: "+ itemPrice +
+			System.out.println("Inadaquate funds\tPaid: " + payValue +"items cost: "+ itemPrice +
 								"Purchase failed.\tTry another time");
-			
 		}
-		else if(item[itemNumber].getQuantity()>0)
+		else if(items[itemNumber].getQuantity() <= 0) // i believe it's <= instead of >
 		{
-			System.out.println("inadaquate item for purchase\nTry other items");
+			System.out.println("inadaquate item for purchase\nTry other item");
 		}
-		
-
 	}
 	
 	//check if changes are enough 
-	public static boolean isChangeEnough(double payValue,double itemPrice,Currency currency[])
+	private static boolean isEnoughChange(double payValue,double itemPrice,Currency currency[])
 	{
-		double changeValue = 0;		
-		changeValue = payValue-itemPrice;
-		for(int i=0;i<currency.length ;i++)
+		double changeValue = payValue-itemPrice;
+		for(int i=0; i<currency.length; i++)
 		{			
-			while(changeValue >= currency[i].getValue())
-			{
-				changeValue -= currency[i].getValue()*currency[i].getQuantity();
-			}				
+			changeValue -= currency[i].getValue() * currency[i].getQuantity();
+			// you dont need while. it should only run once. and it will only run once.
+
+			//minor change. early stop
+			if (changeValue <= 0) {
+				return true;
+			}
 		}
 		return changeValue<=0;
 	}
 	
 	
 	//calculate and get change
-	public static void returnChange(double payValue,double itemPrice,Currency currency[])
+	private static void returnChange(double payValue,double itemPrice,Currency currency[])
 	{
-		double changeValue=0;
-		changeValue= payValue-itemPrice;
+		double changeValue = payValue-itemPrice;
 		if(changeValue>0)
 		{
 			System.out.println("Change Amount: $"+changeValue );
@@ -152,70 +114,30 @@ public class VenderMachine {
 		}
 	}
 	
-	
-	public static boolean isCurrencyPaperMaterial(Currency currency[])
-	{
+
+	// all this can be combine into one. also, make it private. you don't want others know this method.
+	private static boolean checkCurrency (Currency currency[], String currencyType, boolean needQuantityCheck){
 		for (int i=0; i<currency.length ;i++)
 		{
-			if(currency[i].getMaterial()=="paper")
-			{
-				return true;
+			if(currency[i].getMaterial() == currencyType)
+			{	
+				if((needQuantityCheck && currency[i].getQuantity() > 0) || !needQuantityCheck) { 
+				// this logic is not that complex, think it through please. you believe in you.
+					return true;
+				}
 			}				
 		}
-		return false;		
+		return false;	
 	}
-	
-	
-	public static boolean isCurrencyMetalMaterial(Currency currency[])
-	{
-		for (int i=0; i<currency.length ;i++)
-		{
-			if(currency[i].getMaterial()=="metal")
-			{
-				return true;
-			}				
-		}
-		return false;		
-	}
-	
-	
-	public static boolean isProvidePaperMaterial(Currency currency[])
-	{
-		for (int i=0; i<currency.length ;i++)
-		{
-			if(currency[i].getQuantity()>0 && currency[i].getMaterial()=="paper")
-			{
-				return true;
-			}				
-		}
-		return false;		
-	}
-	
-	
-	
-	public static boolean isProvideMetalMaterial(Currency currency[])
-	{
-		for (int i=0; i<currency.length ;i++)
-		{
-			if(currency[i].getQuantity()>0 && currency[i].getMaterial()=="metal")
-			{
-				return true;
-			}				
-		}
-		return false;		
-	}
-	
-	
-	
 	
 	//machine command method
-	public static void machineCommand(Product item[],Currency currency[])
+	private static void machineCommand(Product items[],Currency currency[])
 	{
 		Scanner in=new Scanner(System.in);
 		ShowCommand();
 		int command=in.nextInt();
 		
-		while(command!=-1)
+		while(command!=-1) // really ugly. you can make switch as its own function.
 		{
 			switch(command)
 			{			
@@ -226,8 +148,7 @@ public class VenderMachine {
 				}	
 				case 1:
 				{
-					displayProduct(item);
-
+					displayProduct(items);
 					break;
 				}
 				case 2:
@@ -237,9 +158,9 @@ public class VenderMachine {
 				}
 				case 3:
 				{
-					System.out.print("Item #: ");
+					System.out.print("items #: ");
 					int itemNumber=in.nextInt();
-					double itemPrice=item[itemNumber].getPrice();
+					double itemPrice=items[itemNumber].getPrice();
 					
 					System.out.print("How many diffrent bill type?: ");
 					int diffCurrency=in.nextInt();
@@ -249,7 +170,7 @@ public class VenderMachine {
 					
 					for (int k=0; k<diffCurrency; k++)
 					{
-						for(int i=0;i<currency.length ;i++)
+						for(int i=0; i<currency.length; i++)
 						{
 							System.out.println("Currency #:" + i + ": " + currency[i].toString());
 						}
@@ -260,26 +181,67 @@ public class VenderMachine {
 						payValue= payValue + currency[currencyType[k]].getValue() * currencyCount[k];
 					}
 					//make purchase
-					if(isChangeEnough(itemPrice,payValue,currency))
+
+					// this part design is not so good
+					// i would check both if there is enough change and enough item at the same time. this is the 'check' step
+					// then do make purchase, which will return change and update item quantity at the same time. this is the 'executation' step.
+					// coz you look at your function, all three functions' inputs are almost the same. and makePurchase will still do 'check'. then returnChange will still 'update'
+					// you need to make method with clear logic.
+					if(isEnoughChange(itemPrice, payValue, currency)) // spacing
 					{
-						makePurchase( itemPrice,  payValue,  item, itemNumber,  diffCurrency, currency,  currencyType, currencyCount);
+						makePurchase( itemPrice,  payValue,  items, itemNumber,  diffCurrency, currency,  currencyType, currencyCount);
 						//calculate change
 						returnChange(payValue,itemPrice,currency);
-						
 					}
 					else
 					{
 						System.out.println("Not enough change, transaction cancelled");
 					}
 					break;										
-				}
-					
+				}	
 			}
 			System.out.print("\nCommand:");
 			command=in.nextInt();
-			
 		}
-		
 		in.close();
+	}
+
+	public static void main(String[] args)  // put all your method IN FRONT OF main. that's ALWAYS the case.
+	{
+		//initiate product
+		String [] name = {"Apple Juice", "Hersey Chocolate"};
+		double [] price = {1.0, 1.0};
+		String [] container = {"Carton-thinRectangle","Bag-medium"};
+		String [] unit = {"ounces", "ounces"};
+		double [] size = {6.0,4.0};
+		int [] quantity = {10, 10};
+
+		Product [] items = loadProduct(name, price, container, unit, size, quantity);
+		
+
+		// please do the same thing for currency
+		//initiate currency
+		String handler="USD";
+		String [] type={"PaperCurrency","PaperCurrency","CoinCurrency","CoinCurrency"};
+		String [] currencyName={"5 Dollar Bill","1 Dollar Bill","50 cent","Quarter"};
+		double [] value={5,1,0.5,0.25};
+		String [] currencySize={"medium","medium","large","medium"}; // are you sure it's right? currencySize for 50 cents is large compare to bill?
+		String [] material={"paper","paper","metal","metal"};
+		int [] currencyQuantity={8,5,0,0};
+		
+		Currency [] currency=new Currency[currencyName.length];
+		
+		for(int i=0; i<currency.length;i++ )
+		{
+			currency[i] = new Currency();
+			currency[i].setType(type[i]);
+			currency[i].setHandler(handler);
+			currency[i].setName(currencyName[i]);
+			currency[i].setValue(value[i]);
+			currency[i].setSize(currencySize[i]);
+			currency[i].setMaterial(material[i]);
+			currency[i].setQuantity(currencyQuantity[i]);
+		}		
+		machineCommand(items, currency);
 	}
 }
